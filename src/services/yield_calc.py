@@ -32,6 +32,12 @@ def upload_image_to_supabase(image_bytes: bytes, user_id: str) -> str:
     return public_url
 
 
+def update_conversation_image(user_id: str, image_url: str):
+    supabase.table("conversation_state").update({
+        "image_url": image_url,
+    }).eq("user_id", user_id).execute()
+
+
 def get_session_state(session_id: str) -> dict:
     """Retrieve or initialize session state from database"""
     res = supabase.table("conversation_state").select("*").eq("session_id", session_id).execute()
