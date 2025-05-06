@@ -65,9 +65,9 @@ if st.session_state.logged_in:
         
         if uploaded_file:
             image_bytes = uploaded_file.getvalue()
-            
-            image_url = upload_image_to_supabase(image_bytes, user_id=st.session_state.user_id)
-            update_conversation_image(user_id=st.session_state.user_id, image_url=image_url)
+
+            # image_url = upload_image_to_supabase(image_bytes, user_id=st.session_state.user_id)
+            # update_conversation_image(user_id=st.session_state.user_id, image_url=image_url)
 
             image_base64 = base64.b64encode(image_bytes).decode("utf-8")
 
