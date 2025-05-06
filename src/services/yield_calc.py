@@ -54,7 +54,7 @@ def next_bot_messages(session_id: str, user_input: str, image: str = None, acces
     if not user_id:
         return "Bạn chưa đăng nhập hoặc token không hợp lệ."
 
-    # ✅ (Tùy chọn) ràng buộc session_id == user_id để tránh giả mạo
+    # (Tùy chọn) ràng buộc session_id == user_id để tránh giả mạo
     if session_id != user_id:
         return "Phiên không hợp lệ. Hãy đăng nhập lại."
 

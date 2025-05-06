@@ -1,9 +1,7 @@
 import streamlit as st
 from services.auth import signup, login
 from services.yield_calc import next_bot_messages, get_session_state, update_session_state
-from PIL import Image
 import base64
-from services.interference import pred_img
 
 st.set_page_config(page_title="Dự đoán năng suất cà phê", page_icon="🌱")
 
