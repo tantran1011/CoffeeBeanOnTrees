@@ -85,6 +85,7 @@ supabase start
 
 ```bash
 git clone https://github.com/tantran1011/CoffeeBeanOnTrees.git
+pip install requirements.txt
 streamlit run src/main.py --server.fileWatcherType none
 ```
 
