@@ -110,8 +110,8 @@ def next_bot_messages(session_id: str, user_input: str, image: str = None, acces
         "image_comment": state['image_comment'],
         "num_trees": state['num_trees'],
         "area_hectares": state['area_hectares'],
-        "location": state['location'],
-        "weather_info": state['weather_info'],
+        "location": user_input,
+        "weather_info": weather,
         "final_yield_estimation": response.text,
         }).execute()
 
