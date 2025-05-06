@@ -1,6 +1,6 @@
 import streamlit as st
 from services.auth import signup, login
-from services.yield_calc import next_bot_messages, get_session_state, update_session_state
+from services.yield_calc import next_bot_messages, get_session_state, update_session_state, upload_image_to_supabase, update_conversation_image
 import base64
 
 st.set_page_config(page_title="Dự đoán năng suất cà phê", page_icon="🌱")
@@ -65,6 +65,10 @@ if st.session_state.logged_in:
         
         if uploaded_file:
             image_bytes = uploaded_file.getvalue()
+            
+            image_url = upload_image_to_supabase(image_bytes, user_id=st.session_state.user_id)
+            update_conversation_image(user_id=st.session_state.user_id, image_url=image_url)
+
             image_base64 = base64.b64encode(image_bytes).decode("utf-8")
 
             bot_reply = next_bot_messages(

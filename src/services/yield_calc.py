@@ -6,6 +6,7 @@ from services.auth import verify_token
 from dotenv import load_dotenv
 from datetime import datetime
 from supabase import create_client, Client
+import uuid
 
 load_dotenv()
 
@@ -16,6 +17,19 @@ key = os.getenv("SUPABASE_KEY")
 supabase: Client = create_client(url, key)
 genai.configure(api_key=os.getenv("CHATBOT_API"))
 model = genai.GenerativeModel('gemini-2.0-flash')
+
+
+def upload_image_to_supabase(image_bytes: bytes, user_id: str) -> str:
+    """Upload image to Supabase Storage and return public URL"""
+    file_name = f"{user_id}/{uuid.uuid4()}.jpg"
+    res = supabase.storage.from_("chatbot-images").upload(file_name, image_bytes, {"content-type": "image/jpeg"})
+    
+    if res.get("error"):
+        raise Exception(res["error"]["message"])
+    
+    # Tạo URL
+    public_url = f"{url}/storage/v1/object/public/chatbot-images/{file_name}"
+    return public_url
 
 
 def get_session_state(session_id: str) -> dict:
@@ -49,12 +63,11 @@ def update_session_state(session_id: str, updates: dict):
 
 def next_bot_messages(session_id: str, user_input: str, image: str = None, access_token: str = None) -> str:
 
-    # Kiểm tra xác thực
+    # Check Auth
     user_id = verify_token(access_token)
     if not user_id:
         return "Bạn chưa đăng nhập hoặc token không hợp lệ."
 
-    # (Tùy chọn) ràng buộc session_id == user_id để tránh giả mạo
     if session_id != user_id:
         return "Phiên không hợp lệ. Hãy đăng nhập lại."
 
