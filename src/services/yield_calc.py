@@ -91,7 +91,7 @@ def next_bot_messages(session_id: str, user_input: str, image: str = None, acces
         weather = get_weather(user_input)
         update_session_state(session_id, {"weather_info": weather})
 
-        # 👉 Generate yield
+        # Generate yield
         prompt = (
             f"Dựa trên thông tin sau: \n"
             f"- Tình trạng cây: {state['image_comment']}\n"
@@ -103,6 +103,17 @@ def next_bot_messages(session_id: str, user_input: str, image: str = None, acces
         )
         response = model.generate_content(prompt)
         update_session_state(session_id, {"step": 5, "final_yield_estimation": response.text})
+
+        # Add to table conversation_history
+        supabase.table("conversation_history").insert({
+        "user_id": session_id,
+        "image_comment": state['image_comment'],
+        "num_trees": state['num_trees'],
+        "area_hectares": state['area_hectares'],
+        "location": state['location'],
+        "weather_info": state['weather_info'],
+        "final_yield_estimation": response.text,
+        }).execute()
 
         return (
             f"Thời tiết tại {user_input} hiện là: {weather}.\n\n"
